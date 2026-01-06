@@ -38,10 +38,20 @@ namespace RescueTimeWebApiClient.Requests
 
         public HttpRequestMessageBuilder WithQueryStringParameters(object payload)
         {
+            if (payload == null)
+            {
+                return this;
+            }
+
             var payloadAsJson = JsonConvert.SerializeObject(payload);
             var payloadAsDictionary = JsonConvert.DeserializeObject<Dictionary<string, string>>(payloadAsJson);
-            var uriWithQueryParameters = QueryHelpers.AddQueryString(RequestUri.ToString(), payloadAsDictionary);
-            RequestUri = new Uri(uriWithQueryParameters);
+
+            if (payloadAsDictionary != null && payloadAsDictionary.Count > 0)
+            {
+                var uriWithQueryParameters = QueryHelpers.AddQueryString(RequestUri.ToString(), payloadAsDictionary);
+                RequestUri = new Uri(uriWithQueryParameters);
+            }
+
             return this;
         }
         
